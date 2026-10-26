@@ -1,14 +1,15 @@
 using UnityEngine;
+using TMPro;
 
 public class TopDownMovement :MonoBehaviour
 {
+    public Animator anim;
     public float moveSpeed;
-    public Animator animator;
 
     private Rigidbody2D rb;
     private float speedX;
     private float speedY;
-    private int direction;
+    private string animationName;
 
     void Start ()
     {
@@ -20,30 +21,25 @@ public class TopDownMovement :MonoBehaviour
         speedX = Input.GetAxisRaw("Horizontal");
         speedY = Input.GetAxisRaw("Vertical");
         if(speedY > 0){
-            
-            direction = 0;
+            animationName = "WalkAway";
         }
         else if (speedY < 0){
-            if (speedX > 0){
-                direction = 2;
-            }
-            if (speedX < 0){
-                direction = 4;
-            }
-            else{
-                direction = 3;
-            }
+            animationName = "WalkForward";
         }
         else{
             if (speedX > 0){
-                direction = 1;
+                animationName = "WalkRight";
             }
             else if (speedX < 0){
-                direction = 5;
+                animationName = "WalkLeft";
             }
         }
-        animator.SetInteger("Direction", direction);
-        animator.SetFloat("Speed", Mathf.Abs(speedX) + Mathf.Abs(speedY));
+        if((Mathf.Abs(speedX) + Mathf.Abs(speedY)) != 0){
+            anim.Play(animationName);
+        }
+        else{
+            anim.Play("Idle");
+        }
     }
 
     void FixedUpdate ()
